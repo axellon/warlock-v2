@@ -2315,6 +2315,8 @@ async function finishLiveClose(state, pos, reason, opts, v) {
     swapTokenToUsdc: (raw, dec) => jupiterSwapLive(pos.mintX, USDC, raw, dec, 6, 'token-to-usdc-close'),
     swapSolToUsdc: raw => jupiterSwapLive(SOL, USDC, raw, 9, 6, 'sol-pile-to-usdc-close'),
     closeTokenAccounts: closeTokenAccountsIfEmpty,
+    // SWEEP: no other open position shares this mint, so any token left of it is dust from an earlier close and is safe to sell too.
+    canSweepStray: async () => !(livePositions.list(state) || []).some(x => x.mintX === pos.mintX && String(x.position) !== String(pos.position)),
   });
   // USDC capital: unsold tokens are retried to USDC (not SOL) and booked meanwhile at the close price - 1% (like the SOL path, M3), corrected when sold.
   let pendingTokenEstimateUsdc = 0;
@@ -2351,6 +2353,8 @@ async function liveCloseSol({ state, pos, reason, opts, v, receivedSol }) {
     getToken: async () => (lastTok = await ownTokenForSale(pos)),   // M1: only this position's tokens are sold, never a stray balance of the same mint
     swapTokenToSol: (raw, dec) => jupiterSwapLive(pos.mintX, SOL, raw, dec, 9, 'token-to-sol-close'),
     closeTokenAccounts: closeTokenAccountsIfEmpty,
+    // SWEEP: no other open position shares this mint, so any token left of it is dust from an earlier close and is safe to sell too.
+    canSweepStray: async () => !(livePositions.list(state) || []).some(x => x.mintX === pos.mintX && String(x.position) !== String(pos.position)),
   });
   // M3 (live-bugfix): tokens that could not be sold are still worth something: valued at the close price minus 1% and booked as an estimate; the pending sell
   // remembers this row and corrects it with the real proceeds when it sells (instead of booking the unsold tokens as a 100% loss).
