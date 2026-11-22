@@ -2,6 +2,10 @@
 
 Credit: dibuat oleh [@SickNatureLimit](https://x.com/SickNatureLimit) · [X](https://x.com/SickNatureLimit) · [Telegram Sicknature Ecosystem](https://t.me/SicknatureEcosystem)
 
+
+Paper trading is what is running (or ready to run) now. Live trading is locked until operator funds the wallet and explicitly approves.
+
+
 ## Instalasi (VPS Linux, mis. Ubuntu 22.04/24.04)
 Butuh: **Node.js >= 20**, **pm2**, **cloudflared** (untuk Mini App Telegram), dan bot Telegram dari @BotFather.
 
@@ -49,6 +53,7 @@ Lalu buka Mini App → Wallet → Live → tombol **LIVE**. Tombol DRY RUN menge
 Catatan:
 - Semua isi `.env` dijelaskan di `.env.example`. `.env`, `secrets/`, data `paper/`, state, dan log tidak pernah ikut di zip ini.
 - cloudflared dicari otomatis di `/usr/local/bin`, `/usr/bin`, atau `~/.local/bin`; kalau di tempat lain, jalankan pm2 dengan `CLOUDFLARED=/path/cloudflared`.
+- Debu token (sisa LP yang gagal di-swap saat close): `node clean-dust.js` untuk melihat (dry run), `CLEAN_DUST_LIVE=1 node clean-dust.js` untuk menjual ke SOL. Hanya token bekas trade Warlock yang dijual; token lain di wallet dan posisi yang masih terbuka tidak disentuh.
 - Tes: `sh run-all-tests.sh` (jalan di salinan terisolasi di /tmp, tidak menyentuh data asli).
 
 ## Current locks
