@@ -43,6 +43,7 @@ Setelah tunnel jalan, tombol **Warlock** muncul di kiri bawah chat bot Telegram 
 ```bash
 node set-wallet-key.js      # kunci wallet KHUSUS bot, diketik tersembunyi, disimpan terenkripsi di secrets/
 ```
+Cara lain yang juga fungsi: tempel private key di Mini App → Wallet (disimpan terenkripsi di `secrets/` yang sama). Syaratnya sesi Telegram harus fresh (kurang dari 5 menit): tutup Mini App, buka ulang dari Telegram, lalu langsung tempel key. SSH tetap paling aman karena key tidak lewat jaringan.
 Lalu buka Mini App → Wallet → Live → tombol **LIVE**. Tombol DRY RUN mengembalikan ke paper (menulis file `STOP`).
 
 Catatan:
@@ -116,7 +117,7 @@ Bot ini gratis. Swap on-chain lewat Jupiter (mode live) memuat **fee platform 0,
 ## Go live (requires funding + the operator's explicit approval)
 
 > **TL;DR — Go Live (uang asli), 4 langkah:**
-> 1. **Simpan private key** lewat SSH (jangan taruh di `.env`): `node set-wallet-key.js` — key diketik tersembunyi, disimpan terenkripsi di `secrets/`. `live-exec.sh` sengaja menghapus `PRIVATE_KEY` dari environment, jadi isi `.env` tidak dipakai buat live.
+> 1. **Simpan private key** (jangan taruh di `.env`): lewat SSH pakai `node set-wallet-key.js` (paling aman, key tidak lewat jaringan), ATAU tempel di Mini App → Wallet (fungsi, tersimpan terenkripsi di `secrets/` yang sama; syaratnya sesi Telegram harus fresh kurang dari 5 menit, jadi tutup Mini App, buka ulang dari Telegram, lalu langsung tempel). `live-exec.sh` sengaja menghapus `PRIVATE_KEY` dari environment, jadi isi `.env` tidak dipakai buat live.
 > 2. **Pastikan wallet bot ada SOL-nya** (alamat publiknya tampil di Mini App → Wallet). Lihat tabel funding di bawah buat jumlahnya.
 > 3. **Pencet Go Live di Mini App** → Wallet → Live → tombol **LIVE**. Ini menghapus file `STOP` (kunci live).
 > 4. **Pastikan proses live jalan di PM2**: `pm2 start ecosystem.live.config.js` (ini yang ngeset `DRY_RUN=0` dan `LIVE_CONFIRMED=1`). Bot nolak jalan live kalau `STOP` masih ada, `LIVE_CONFIRMED` bukan `1`, atau `DRY_RUN` masih `1`.
