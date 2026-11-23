@@ -789,11 +789,13 @@ function dailyDue(now = new Date()) {
 function notifyDailySummary(status = {}) {
   const { date } = wibHourMinute();
   if (!dailyDue()) return Promise.resolve({ ok: false, skipped: 'daily already sent or not due' });
+    // Mark BEFORE sending: the bot checks every 5s, and a slow send let a second
+    // check pass the guard and send a duplicate (23 Nov 2026). Same pattern as
+    // the daily card (marked before rendering: never twice). Trade-off: if this
+    // one send fails, that day's summary is skipped rather than retried.
+    saveCfgPatch({ lastDailySummaryDate: date });
   const html = tgFormat.dailySummaryHtml(status, { lang: htmlLang(), paper: !IS_LIVE });   // Warlock 2.0: SOL first, W · L · BE
-  return send(html, { parse_mode: 'HTML' }).then((res) => {
-    if (res && res.ok) saveCfgPatch({ lastDailySummaryDate: date });
-    return res;
-  });
+  return send(html, { parse_mode: 'HTML' });
 }
 
 function notifyWindowEnd(status = {}) {
