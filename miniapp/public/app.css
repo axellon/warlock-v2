@@ -593,11 +593,11 @@ dialog{background:var(--card)!important;border-color:#493363!important}
 .summary-grid .tile-live{font-size:10px;color:var(--hint);margin-top:3px;letter-spacing:.2px}
 
 /* Fix 2026-11-27: teks tombol sub-tab & judul hero meluber di layar HP sempit.
-   - Sub-tab (Open positions dkk): boleh turun jadi 2 baris di <=400px (sebelumnya
+   - Sub-tab (Open positions dkk): boleh turun jadi 2 baris di <=420px (sebelumnya
      dipaksa sebaris + nowrap, label Open positions lebih lebar 6px dari tombolnya).
    - Judul hero: wadah teks boleh mengecil supaya subtitle terpotong rapi (ellipsis),
      bukan mendorong kartu melewati layar di 360px. */
-@media (max-width:400px){
+@media (max-width:420px){
   .position-subtabs{flex-wrap:wrap}
   .position-subtabs .btn{flex:1 1 40%}
 }
